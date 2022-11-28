@@ -1,17 +1,8 @@
 import random
 import sys
-
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-
-
-def plot_func(xk, y, colour):
-    plt.plot(xk, y, colour)
-    plt.title("functions")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.grid(True, alpha=1, linestyle='--')
 
 
 def gen_sigma_and_noise(a, K, y):
@@ -57,6 +48,7 @@ def arithmetic_mean(M, noise_fnk, alfa_a):
 
 def omegasearcher(func_mov_av, M):
     summary = 0
+    # print("ARRRRRRR:", func_mov_av)
     for k in range(1, 101 - 2 * M):
         summary += abs(func_mov_av[k] - func_mov_av[k - 1])
     return summary
@@ -111,10 +103,10 @@ class SolverClass(object):
                     best_omega = omega
                     best_delta = delta
                 average_moving.clear()
-                self.J_min.append(J_min)
-                self.optimal_a.append(best_alpha)
-                self.omegas.append(best_omega)
-                self.deltas.append(best_delta)
+            self.J_min.append(J_min)
+            self.optimal_a.append(best_alpha)
+            self.omegas.append(best_omega)
+            self.deltas.append(best_delta)
 
     def distance(self):
         for i in range(0, len(self.deltas)):
@@ -137,9 +129,60 @@ class SolverClass(object):
             filtering.append(summary)
         return optimal_J, optimal_alpha, optimal_lambda, optimal_delta, optimal_omega, min_dist, filtering
 
+    def printer(self, opt_lambda, omega, delta, J):
+        if self.radios == 3:
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            print("|\th\t|\tdis    |\t\talpha\t\t  |\tw\t\t|\td\t  |")
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            for i in range(1, len(self.lambdas)):
+                print(f"|  {self.lambdas[i]}", end="")
+                print(f"  |{round(self.dist[i], 5):>9f}", end="")
+                print(f" | {self.optimal_a[i][0]:>0.4f} {self.optimal_a[i][1]:>0.4f} {self.optimal_a[i][2]:>0.4f} ",
+                      end="")
+                print(f"| {self.omegas[i]:>0.5f} |", end="")
+                print(f" {self.deltas[i]:>0.5f} |")
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+
+        if self.radios == 5:
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            print("|\th\t|\tdis    |\t\talpha\t\t  |\tw\t\t|\td\t  |")
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            for i in range(1, len(self.lambdas)):
+                print(f"|  {self.lambdas[i]}", end="")
+                print(f"  |{round(self.dist[i], 5):>9f}", end="")
+                print(f" | {self.optimal_a[i][0]:>0.4f} {self.optimal_a[i][1]:>0.4f} {self.optimal_a[i][2]:>0.4f} ",
+                      end="")
+                print(f"| {self.omegas[i]:>0.5f} |", end="")
+                print(f" {self.deltas[i]:>0.5f} |")
+            print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+    def scater_plot(self):
+        temp_color = ["red", "orange", "green", "blue", "pink", "yellow", "lime", "grey", "black", "cyan", "olive"]
+        for i in range(0, 11):
+            print(self.omegas[i], self.deltas[i], temp_color[i])
+            plt.scatter(self.omegas[i], self.deltas[i], color=temp_color[i])
+
+        plt.legend([
+            f'{self.deltas[0]:>0.5f} {self.omegas[0]:>0.5f}',
+            f'{self.deltas[1]:>0.5f} {self.omegas[1]:>0.5f}',
+            f'{self.deltas[2]:>0.5f} {self.omegas[2]:>0.5f}',
+            f'{self.deltas[3]:>0.5f} {self.omegas[3]:>0.5f}',
+            f'{self.deltas[4]:>0.5f} {self.omegas[4]:>0.5f}',
+            f'{self.deltas[5]:>0.5f} {self.omegas[5]:>0.5f}',
+            f'{self.deltas[6]:>0.5f} {self.omegas[6]:>0.5f}',
+            f'{self.deltas[7]:>0.5f} {self.omegas[7]:>0.5f}',
+            f'{self.deltas[8]:>0.5f} {self.omegas[8]:>0.5f}',
+            f'{self.deltas[9]:>0.5f} {self.omegas[9]:>0.5f}',
+            f'{self.deltas[10]:>0.5f} {self.omegas[10]:>0.5f}',
+        ])
+        plt.xlabel("omega")
+        plt.ylabel("delta")
+        plt.grid()
+        plt.show()
+
 
 if __name__ == "__main__":
     k = np.array([float((k * math.pi) / 100) for k in range(0, 101)])
+
     main_signal = np.array([signal(elem) for elem in k])
     main_noise = np.array([signal(elem) + (random.random() / 2 - 0.25) for elem in k])
     lambda_l = np.array([l_elem / 10 for l_elem in range(0, 11)])
@@ -149,6 +192,7 @@ if __name__ == "__main__":
     ob_3.method(main_noise, lambda_l)
     ob_3.distance()
     optimal_J, optimal_alpha, optimal_lambda, optimal_delta, optimal_omega, min_dist, filtering = ob_3.filter()
+    ob_3.printer(optimal_lambda, optimal_omega, optimal_delta, optimal_J)
     filter_k = np.array([float((k * math.pi) / 100) for k in range(1, 100)])
     plt.plot(k, main_signal, k, main_noise, filter_k, filtering)
     plt.legend(['f(x) = sin(x) + 0.5', 'Noise', 'Filtering'])
@@ -157,12 +201,14 @@ if __name__ == "__main__":
     plt.title('Размер скользящего окна r = 3')
     plt.grid()
     plt.show()
+    ob_3.scater_plot()
 
     r = 5
-    ob_3 = SolverClass(main_signal, main_noise, lambda_l, r)
-    ob_3.method(main_noise, lambda_l)
-    ob_3.distance()
-    optimal_J, optimal_alpha, optimal_lambda, optimal_delta, optimal_omega, min_dist, filtering = ob_3.filter()
+    ob_5 = SolverClass(main_signal, main_noise, lambda_l, r)
+    ob_5.method(main_noise, lambda_l)
+    ob_5.distance()
+    optimal_J, optimal_alpha, optimal_lambda, optimal_delta, optimal_omega, min_dist, filtering = ob_5.filter()
+    ob_5.printer(optimal_lambda, optimal_omega, optimal_delta, optimal_J)
     filter_k = np.array([float((k * math.pi) / 100) for k in range(1, 98)])
     plt.plot(k, main_signal, k, main_noise, filter_k, filtering)
     plt.legend(['f(x) = sin(x) + 0.5', 'Noise', 'Filtering'])
@@ -171,3 +217,5 @@ if __name__ == "__main__":
     plt.title('Размер скользящего окна r = 5')
     plt.grid()
     plt.show()
+    ob_5.scater_plot()
+
