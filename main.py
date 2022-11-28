@@ -5,15 +5,6 @@ import numpy as np
 import math
 
 
-def gen_sigma_and_noise(a, K, y):
-    sigma_k = np.array(float(random.uniform(-a, a)))
-    for i in range(1, K):
-        sigma_k = np.append(sigma_k, float(random.uniform(-a, a)))
-    fnk = np.array(y[0] + sigma_k[0])
-    for i in range(1, K):
-        fnk = np.append(fnk, y[i] + sigma_k[i])
-    return fnk
-
 
 def gen_alpha(r, M):
     alfa_arr = []
