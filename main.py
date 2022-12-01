@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-
-
 def gen_alpha(r, M):
     alfa_arr = []
 
@@ -39,7 +37,6 @@ def arithmetic_mean(M, noise_fnk, alfa_a):
 
 def omegasearcher(func_mov_av, M):
     summary = 0
-    # print("ARRRRRRR:", func_mov_av)
     for k in range(1, 101 - 2 * M):
         summary += abs(func_mov_av[k] - func_mov_av[k - 1])
     return summary
@@ -125,6 +122,12 @@ class SolverClass(object):
             print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
             print("|\th\t|\tdis    |\t\talpha\t\t  |\tw\t\t|\td\t  |")
             print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            print(f"|  {self.lambdas[0]}", end="")
+            print(f"  |{round(self.dist[0], 5):>9f}", end="")
+            print(f" | {self.optimal_a[0][0]:>0.4f} {self.optimal_a[0][1]:>0.4f} {self.optimal_a[0][2]:>0.4f} ",
+                  end="")
+            print(f"|{self.omegas[0]:>0.5f} |", end="")
+            print(f" {self.deltas[0]:>0.5f} |")
             for i in range(1, len(self.lambdas)):
                 print(f"|  {self.lambdas[i]}", end="")
                 print(f"  |{round(self.dist[i], 5):>9f}", end="")
@@ -138,6 +141,12 @@ class SolverClass(object):
             print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
             print("|\th\t|\tdis    |\t\talpha\t\t  |\tw\t\t|\td\t  |")
             print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+            print(f"|  {self.lambdas[0]}", end="")
+            print(f"  |{round(self.dist[0], 5):>9f}", end="")
+            print(f" | {self.optimal_a[0][0]:>0.4f} {self.optimal_a[0][1]:>0.4f} {self.optimal_a[0][2]:>0.4f} ",
+                  end="")
+            print(f"| {self.omegas[0]:>0.5f} |", end="")
+            print(f" {self.deltas[0]:>0.5f} |")
             for i in range(1, len(self.lambdas)):
                 print(f"|  {self.lambdas[i]}", end="")
                 print(f"  |{round(self.dist[i], 5):>9f}", end="")
@@ -146,25 +155,36 @@ class SolverClass(object):
                 print(f"| {self.omegas[i]:>0.5f} |", end="")
                 print(f" {self.deltas[i]:>0.5f} |")
             print("+", 7 * '-', "+", 10 * '-', "+", 22 * "-", "+", 9 * '-', "+", 9 * '-', "+", sep="")
+
     def scater_plot(self):
         temp_color = ["red", "orange", "green", "blue", "pink", "yellow", "lime", "grey", "black", "cyan", "olive"]
         for i in range(0, 11):
-            print(self.omegas[i], self.deltas[i], temp_color[i])
+            plt.scatter(0, 0, color="purple")
             plt.scatter(self.omegas[i], self.deltas[i], color=temp_color[i])
 
         plt.legend([
-            f'{self.deltas[0]:>0.5f} {self.omegas[0]:>0.5f}',
-            f'{self.deltas[1]:>0.5f} {self.omegas[1]:>0.5f}',
-            f'{self.deltas[2]:>0.5f} {self.omegas[2]:>0.5f}',
-            f'{self.deltas[3]:>0.5f} {self.omegas[3]:>0.5f}',
-            f'{self.deltas[4]:>0.5f} {self.omegas[4]:>0.5f}',
-            f'{self.deltas[5]:>0.5f} {self.omegas[5]:>0.5f}',
-            f'{self.deltas[6]:>0.5f} {self.omegas[6]:>0.5f}',
-            f'{self.deltas[7]:>0.5f} {self.omegas[7]:>0.5f}',
-            f'{self.deltas[8]:>0.5f} {self.omegas[8]:>0.5f}',
-            f'{self.deltas[9]:>0.5f} {self.omegas[9]:>0.5f}',
-            f'{self.deltas[10]:>0.5f} {self.omegas[10]:>0.5f}',
+            f'h   |  delta   |  omega',
+            f'{self.lambdas[0]}|{self.deltas[0]:>0.5f}|{self.omegas[0]:>0.5f}',
+            f'{self.lambdas[1]}|{self.deltas[1]:>0.5f}|{self.omegas[1]:>0.5f}',
+            f'{self.lambdas[2]}|{self.deltas[2]:>0.5f}|{self.omegas[2]:>0.5f}',
+            f'{self.lambdas[3]}|{self.deltas[3]:>0.5f}|{self.omegas[3]:>0.5f}',
+            f'{self.lambdas[4]}|{self.deltas[4]:>0.5f}|{self.omegas[4]:>0.5f}',
+            f'{self.lambdas[5]}|{self.deltas[5]:>0.5f}|{self.omegas[5]:>0.5f}',
+            f'{self.lambdas[6]}|{self.deltas[6]:>0.5f}|{self.omegas[6]:>0.5f}',
+            f'{self.lambdas[7]}|{self.deltas[7]:>0.5f}|{self.omegas[7]:>0.5f}',
+            f'{self.lambdas[8]}|{self.deltas[8]:>0.5f}|{self.omegas[8]:>0.5f}',
+            f'{self.lambdas[9]}|{self.deltas[9]:>0.5f}|{self.omegas[9]:>0.5f}',
+            f'{self.lambdas[10]}|{self.deltas[10]:>0.5f}|{self.omegas[10]:>0.5f}',
         ])
+        print("+-------+---------+---------+---------+")
+        print("|   h*  |    J    |    w    |     d   |")
+        print("+-------+---------+---------+---------+")
+        print(f"|  {optimal_lambda:>0.1f}", end="")
+        print(f"  | {optimal_J:>0.5f}", end="")
+        print(f" | {optimal_omega:>0.5f} |", end="")
+        print(f" {optimal_delta:>0.5f} |")
+        print("+-------+---------+---------+---------+")
+        print()
         plt.xlabel("omega")
         plt.ylabel("delta")
         plt.grid()
@@ -173,7 +193,6 @@ class SolverClass(object):
 
 if __name__ == "__main__":
     k = np.array([float((k * math.pi) / 100) for k in range(0, 101)])
-
     main_signal = np.array([signal(elem) for elem in k])
     main_noise = np.array([signal(elem) + (random.random() / 2 - 0.25) for elem in k])
     lambda_l = np.array([l_elem / 10 for l_elem in range(0, 11)])
@@ -189,7 +208,7 @@ if __name__ == "__main__":
     plt.legend(['f(x) = sin(x) + 0.5', 'Noise', 'Filtering'])
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Размер скользящего окна r = 3')
+    plt.title('Sliding Window size r = 3')
     plt.grid()
     plt.show()
     ob_3.scater_plot()
@@ -205,8 +224,7 @@ if __name__ == "__main__":
     plt.legend(['f(x) = sin(x) + 0.5', 'Noise', 'Filtering'])
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Размер скользящего окна r = 5')
+    plt.title('Sliding Window size r = 5')
     plt.grid()
     plt.show()
     ob_5.scater_plot()
-
